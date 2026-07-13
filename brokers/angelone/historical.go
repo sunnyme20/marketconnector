@@ -28,8 +28,9 @@ func (a *Angelone) GetHistoricalData(exchange models.Exchange, symbolToken strin
 	}
 
 	// Parse candle data from [][]any to []HistoricalCandle
+	records, _ := candleResp.ParseData()
 	var candles []models.HistoricalCandle
-	for _, record := range candleResp.Data {
+	for _, record := range records {
 		if len(record) < 6 {
 			continue
 		}
@@ -57,8 +58,9 @@ func (a *Angelone) GetHistoricalData(exchange models.Exchange, symbolToken strin
 		return nil, fmt.Errorf("failed to fetch OI data: %w", err)
 	}
 
+	oiRecords, _ := oiResp.ParseOIData()
 	var oiItems []models.HistoricalOIItem
-	for _, item := range oiResp.Data {
+	for _, item := range oiRecords {
 		oiItems = append(oiItems, models.HistoricalOIItem{
 			Timestamp: item.Time,
 			OI:        item.OI,

@@ -1,6 +1,7 @@
 package angelone
 
 import (
+	"encoding/json"
 	"fmt"
 
 	models "github.com/sunnyme20/marketconnector/brokers/model"
@@ -159,12 +160,37 @@ type HistoricalRequest struct {
 
 type HistoricalCandleData struct {
 	Response
-	Data [][]any `json:"data"`
+	Data json.RawMessage `json:"data"`
+}
+
+// ParseData parses the raw Data field into candle records.
+// If data is an empty string or invalid, it returns an empty slice.
+func (h *HistoricalCandleData) ParseData() ([][]any, error) {
+	if h.Data == nil || string(h.Data) == `""` || string(h.Data) == "" {
+		return [][]any{}, nil
+	}
+	var records [][]any
+	if err := json.Unmarshal(h.Data, &records); err != nil {
+		return [][]any{}, nil // silently return empty on parse failure
+	}
+	return records, nil
 }
 
 type HistoricalOIData struct {
 	Response
-	Data []HistoricalOIItemRaw `json:"data"`
+	Data json.RawMessage `json:"data"`
+}
+
+// ParseOIData parses the raw Data field into OI items.
+func (h *HistoricalOIData) ParseOIData() ([]HistoricalOIItemRaw, error) {
+	if h.Data == nil || string(h.Data) == `""` || string(h.Data) == "" {
+		return []HistoricalOIItemRaw{}, nil
+	}
+	var items []HistoricalOIItemRaw
+	if err := json.Unmarshal(h.Data, &items); err != nil {
+		return []HistoricalOIItemRaw{}, nil
+	}
+	return items, nil
 }
 
 type HistoricalOIItemRaw struct {
