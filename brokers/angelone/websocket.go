@@ -447,11 +447,15 @@ func parseTick(b []byte) (models.MarketQuoteResponse, error) {
 	}
 	offset += 8
 
+	// Convert exchange timestamp from UTC epoch ms to readable IST string
+	istLoc := time.FixedZone("IST", 5*60*60+30*60)
+	exchangeTimeStr := time.UnixMilli(exchTime).In(istLoc).Format("02-Jan-2006 15:04:05")
+
 	tick := models.MarketQuoteResponse{
 		SymbolToken:    token,
 		LTP:            ltp,
 		SequenceNumber: seqNum,
-		ExchangeTime:   exchTime,
+		ExchangeTime:   exchangeTimeStr,
 	}
 
 	// For LTP mode (mode=1), packet ends here at 51 bytes

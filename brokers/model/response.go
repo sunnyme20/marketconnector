@@ -48,7 +48,7 @@ type MarketQuoteResponse struct {
 	Week52High     float64      `json:"52_week_high,omitempty"`
 	Week52Low      float64      `json:"52_week_low,omitempty"`
 	LastTradeTime  int64        `json:"last_trade_time,omitempty"`
-	ExchangeTime   int64        `json:"exchange_time,omitempty"`
+	ExchangeTime   string       `json:"exchange_time,omitempty"`
 	SequenceNumber int64        `json:"sequence_number,omitempty"`
 	Depth          *MarketDepth `json:"depth,omitempty"`
 }
