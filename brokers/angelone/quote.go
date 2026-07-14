@@ -22,6 +22,7 @@ func (a *Angelone) fetchQuoteBatch(mode models.QuoteMode, exchangeTokens map[str
 	var resp *QuoteResponse
 	err := client.Post(Api.Quote, req, &resp)
 	if err != nil {
+		fmt.Println("Error fetching quote", err)
 		return nil, err
 	}
 
@@ -45,7 +46,7 @@ func (a *Angelone) fetchQuoteBatch(mode models.QuoteMode, exchangeTokens map[str
 				})
 			}
 		}
-
+		// fmt.Println(item)
 		quotes = append(quotes, models.MarketQuoteResponse{
 			Exchange:      item.Exchange,
 			TradingSymbol: item.TradingSymbol,

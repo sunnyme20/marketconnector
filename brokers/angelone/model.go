@@ -130,8 +130,8 @@ type QuoteFetched struct {
 	NetChange     float64    `json:"netChange"`
 	PercentChange float64    `json:"percentChange"`
 	AvgPrice      float64    `json:"avgPrice"`
-	TradeVolume   int32      `json:"tradeVolume"`
-	OpnInterest   int32      `json:"opnInterest"`
+	TradeVolume   int64      `json:"tradeVolume"`
+	OpnInterest   int64      `json:"opnInterest"`
 	UpperCircuit  float64    `json:"upperCircuit"`
 	LowerCircuit  float64    `json:"lowerCircuit"`
 	TotBuyQuan    int32      `json:"totBuyQuan"`
