@@ -121,7 +121,7 @@ func (a *Angelone) GetHistoricalData(exchange models.Exchange, symbolToken strin
 	jobCh := make(chan SymbolBatch, len(batches))
 	resultCh := make(chan BatchResult, len(batches))
 
-	limiter := rate.NewLimiter(3, 1) // 3 req/s, burst=1 for strict ordering
+	limiter := rate.NewLimiter(HistoricalRateLimit, HistoricalRateBurst)
 
 	var wg sync.WaitGroup
 	for i := 0; i < numWorkers; i++ {

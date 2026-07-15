@@ -210,6 +210,13 @@ const (
 	OneDay     = "ONE_DAY"
 )
 
+// --------------- Rate limits (requests/second) ------------------------
+// Centralised here so all callers use the same values — change in one place.
+const (
+	HistoricalRateLimit = 3 // max requests per second for historical data
+	HistoricalRateBurst = 1 // burst size for rate limiter
+)
+
 // MapExchange converts a broker-agnostic Exchange to AngelOne's API string.
 func MapExchange(e models.Exchange) string {
 	return string(e)
@@ -237,6 +244,19 @@ func MapTimeframe(tf models.Timeframe) string {
 	default:
 		return OneDay
 	}
+}
+
+// IntervalMaxDays defines the maximum number of days AngelOne allows
+// in a single historical data request for each interval.
+var IntervalMaxDays = map[models.Timeframe]int{
+	models.Timeframe1Minute:   30,
+	models.Timeframe3Minutes:  60,
+	models.Timeframe5Minutes:  100,
+	models.Timeframe10Minutes: 100,
+	models.Timeframe15Minutes: 200,
+	models.Timeframe30Minutes: 200,
+	models.Timeframe1Hour:     400,
+	models.Timeframe1Day:      2000,
 }
 
 // MapSubscriptionMode converts a broker-agnostic SubscriptionMode to AngelOne's API int.

@@ -10,19 +10,6 @@ import (
 	"golang.org/x/time/rate"
 )
 
-// IntervalMaxDays defines the maximum number of days AngelOne allows
-// in a single historical data request for each interval.
-var IntervalMaxDays = map[models.Timeframe]int{
-	models.Timeframe1Minute:   30,
-	models.Timeframe3Minutes:  60,
-	models.Timeframe5Minutes:  100,
-	models.Timeframe10Minutes: 100,
-	models.Timeframe15Minutes: 200,
-	models.Timeframe30Minutes: 200,
-	models.Timeframe1Hour:     400,
-	models.Timeframe1Day:      2000,
-}
-
 const angeloneDateFormat = "2006-01-02 15:04"
 
 // SymbolRequest describes one symbol's historical data request.
@@ -186,7 +173,7 @@ func (a *Angelone) FetchHistoricalDataBatch(requests []SymbolRequest) (*models.R
 	resultCh := make(chan BatchResult, totalBatches)
 
 	// Strict rate limiter — 3 req/s, burst=1 so only one request fires at a time
-	limiter := rate.NewLimiter(3, 1)
+	limiter := rate.NewLimiter(HistoricalRateLimit, HistoricalRateBurst)
 
 	var wg sync.WaitGroup
 	for i := 0; i < numWorkers; i++ {
